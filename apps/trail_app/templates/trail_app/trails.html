@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Trails</title>
+    <meta name="Trails" content="list of trails and add a new trail">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login_reg_app/css/style.css' %}">  
+
+</head>
+
+<body>
+    <div class="jumbotron">
+
+        <p>Welcome, {{ request.session.user_name }}</p>
+        <div class="heading d-flex">
+            <h1>Trails</h1>
+            <div class="ml-auto">
+                <a href="/myaccount/{{request.session.user_id}}">Edit My Account</a>
+                <form action="/logout" method="POST">
+                {% csrf_token %}
+                    <button class="btn btn-primary my-2">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <h3>Check out some of the latest reports:</h3>
+            {% for each_report in all_reports %}
+            <div class="message_field">
+                <p class="bold">
+                    Trail: {{ each_report.trail_id.name }}
+                    <a href="/trails/{{each_trail.trail_id.id}}">Trail info</a>
+                </p>
+                <p>
+                    Posted by: {{ each_report.user_id.first_name }} - {{ each_report.updated_at }}
+                    <a href="/report/user/{{each_report.user_id.id}}">user's page</a>
+                </p>
+                <p> Rating: {{ each_report.rating }}</p>
+                <p> Report: {{each_report.comment}}</p>
+                <p> Updated: {{each_report.updated_at}}</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="main_contents">
+            <h3>Trails:</h3>
+            <!-- display every trails -->
+            {% for each_trail in all_trails %}
+            <div class="trails">
+                <p class="bold">{{ each_trail.name }}</p>
+                <p>
+                    Length:{{each_trail.length}}, Elevation{{each_trail.elevation}}, Level{{each_trail.level}}
+                </p>
+                <p>Trail Head: {{each_trail.trail_head}}</p>
+                <p>Link: {{each_trail.link}}</p>
+                <p>Posted by: 
+                    <a href="/report/user/{{each_trail.user_id.id}}"> {{ each_trail.user_id.first_name }} </a>
+                    at {{each_trail.updated_at}}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="main_contents right">
+            <h3>Add a Trail!</h3>
+            {% if messages %}
+                {% for message in messages %}
+                    <p style="color: red;">{{message}}</p>
+                {% endfor %}
+            {% endif %}
+
+            <form action='/trails/create_trail' method='post'>
+                {% csrf_token %}
+                <p>Name: <input type="text" name="name"></p>
+                <p>Length (miles): <input type="text" name="length"></p>
+                <p>Elevation (ft): <input type="text" name="elevation"></p>
+                <p>Difficulty level: </p>
+                <select name="level">
+                    <option value="easy">Easy</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <p>Trail head: </p>
+                <textarea name="trail_head" rows="1" cols="30"></textarea>
+                <p>Link: <input type="text" name="link"></p>
+            </form>
+        </div>
+
+    </div>
+</body>
+</html>

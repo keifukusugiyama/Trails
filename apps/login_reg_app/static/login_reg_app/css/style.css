@@ -1,0 +1,28 @@
+.heading{
+    min-height: 70px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid black;
+}
+.heading *{
+    display: inline-block;
+}
+.main_contents{
+    display: inline-block;
+    vertical-align: top;
+    width: 40%;
+}
+
+.trails{
+
+    border: 1px solid black;
+    width: 300px;
+    word-wrap: break-word;
+    margin-bottom: 5px;
+}
+.right{
+    margin-left: 15%;
+}
+
+.bold{
+    font-weight: bold;
+}
