@@ -18,6 +18,7 @@
         <div class="heading d-flex">
             <h1>Trail: {{trail.name}}</h1>
             <div class="ml-auto">
+                <a href="/trails">Go back to Trails Home</a>
                 <a href="/reports/user/{{request.session.user_id}}">My Reports</a>
                 <form action="/logout" method="POST">
                 {% csrf_token %}
@@ -51,13 +52,11 @@
 
         <div>
             <h3>Reports on this trail:</h3>
-            {% for each_report in all_reports %}
-            <div class="message_field">
+            {% for each_report in reports %}
+            <div class="box">
                 <p>
-                    Posted by: {{ each_report.user_id.first_name }} - {{ each_report.updated_at }}
-                    <a href="/reports/user/{{each_report.user_id.id}}">user's page</a>
+                    Rating: {{ each_report.rating }} Posted by: <a href="/reports/user/{{each_report.user_id.id}}">{{ each_report.user_id.first_name }}</a> - {{ each_report.updated_at }}
                 </p>
-                <p> Rating: {{ each_report.rating }}</p>
                 <p> Report: {{each_report.comment}}</p>
             </div>
             {% endfor %}
@@ -77,6 +76,7 @@
                 <p>Report: </p>
                 <textarea name="comment" rows="5" cols="60"></textarea>
                 <p>Rating: <input type="number" name="rating" min="1" max="5"></p>
+                <input type="hidden" name="trail_id" value="{{trail.id}}">
                 <input type='submit' value='Submit'>
             </form>
         </div>

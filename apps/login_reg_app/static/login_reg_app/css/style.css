@@ -12,10 +12,10 @@
     width: 40%;
 }
 
-.trails{
+.box{
 
     border: 1px solid black;
-    width: 300px;
+
     word-wrap: break-word;
     margin-bottom: 5px;
 }

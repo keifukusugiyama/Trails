@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Trails</title>
+    <meta name="Trails" content="list of trails and add a new trail">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login_reg_app/css/style.css' %}">  
+
+</head>
+
+<body>
+    <div class="jumbotron">
+        <div class="heading d-flex">
+            <div class="ml-auto">
+                <a href="/trails">Go back to Trails Home</a>
+                <a href="/reports/user/{{request.session.user_id}}">My Reports</a>
+                <form action="/logout" method="POST">
+                {% csrf_token %}
+                    <button class="btn btn-primary my-2">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <h3>Edit report</h3>
+            {% if messages %}
+                {% for message in messages %}
+                    <p style="color: red;">{{message}}</p>
+                {% endfor %}
+            {% endif %}
+
+            <form action='/reports/{{this_report.id}}/update_report' method='post'>
+                {% csrf_token %}
+                <p>Report: </p>
+                <textarea name="comment" rows="5" cols="60">{{this_report.comment}}</textarea>
+                <p>Rating: <input type="number" name="rating" min="1" max="5"></p>
+                <input type='submit' value='Submit'>
+            </form>
+    </div>
+
+</div>
+</body>
+</html>

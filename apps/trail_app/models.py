@@ -21,6 +21,7 @@ class Trails(models.Model):
     trail_head = models.TextField()
     link = models.CharField(max_length=255)
     user_id = models.ForeignKey(Users, related_name="trails")
+    wish_list_users = models.ManyToManyField(Users, related_name="wish_list_trails")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = TrailManager()

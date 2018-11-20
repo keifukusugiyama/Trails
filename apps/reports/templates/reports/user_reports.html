@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Trails</title>
+    <meta name="Trails" content="list of trails and add a new trail">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login_reg_app/css/style.css' %}">  
+
+</head>
+
+<body>
+    <div class="jumbotron">
+        <div class="heading d-flex">
+            <h1>{{user_name}}'s page</h1>
+            <div class="ml-auto">
+                <a href="/trails">Go back to Trails Home</a>
+                <form action="/logout" method="POST">
+                {% csrf_token %}
+                    <button class="btn btn-primary my-2">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <h3>Reports by {{user_name}}:</h3>
+            {% for each_report in reports %}
+            <div class="box">
+                <p> Trail: <a href="/trails/{{each_report.trail_id.id}}">{{each_report.trail_id.name}}</a> Rating: {{ each_report.rating }}, at {{ each_report.updated_at }}</p>
+                <p> Report: {{each_report.comment}}</p>
+                <p>Exercise logs:</p>
+                <a href="/reports/{{each_report.id}}/edit_report">Edit</a>
+
+                <form action='/reports/delete_report' method='post'>
+                    {% csrf_token %}
+                    <input hidden name="report_id" value="{{each_report.id}}">
+                    <input type='submit' value='Delete'>
+                    </form>
+            </div>
+            {% endfor %}
+        </div>
+            <h4>Wish List:</h4>
+            {% for each_trail in wish_list_trails %}
+                <p>{{each_trail.name}}</p>
+            {% endfor %}
+
+
+    </div>
+</body>
+</html>
