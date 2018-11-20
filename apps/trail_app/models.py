@@ -5,6 +5,8 @@ class TrailManager(models.Manager):
     def trail_validator(self, postData):
         errors = {}
         # add keys and values to errors dictionary for each invalid field
+        if len(postData['name']) < 2:
+            errors["name"] = "Please enter at lease 2 characters for Name"
         if len(postData['length']) < 1:
             errors["length"] = "Length field required"
         if len(postData['trail_head']) < 2:

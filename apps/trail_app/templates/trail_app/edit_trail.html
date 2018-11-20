@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Trails</title>
+    <meta name="Trails" content="list of trails and add a new trail">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login_reg_app/css/style.css' %}">  
+
+</head>
+
+<body>
+    <div class="jumbotron">
+        <div class="heading d-flex">
+            <h1>Trail: {{trail.name}}</h1>
+            <div class="ml-auto">
+                <a href="/reports/user/{{request.session.user_id}}">My Reports</a>
+                <form action="/logout" method="POST">
+                {% csrf_token %}
+                    <button class="btn btn-primary my-2">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <h3>Edit Trail!</h3>
+            {% if messages %}
+                {% for message in messages %}
+                    <p style="color: red;">{{message}}</p>
+                {% endfor %}
+            {% endif %}
+
+            <form action='/trails/{{trail.id}}/update_trail' method='post'>
+                {% csrf_token %}
+                <p>Name: <input type="text" name="name" value="{{trail.name}}"></p>
+                <p>Length (miles): <input type="text" name="length" value="{{trail.length}}"></p>
+                <p>Elevation (ft): <input type="text" name="elevation" value="{{trail.elevation}}"></p>
+                <p>Difficulty level: </p>
+                <select name="level">
+                    <option value="easy">Easy</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <p>Trail head: </p>
+                <textarea name="trail_head" rows="1" cols="30">{{trail.trail_head}}</textarea>
+                <p>Link: <input type="text" name="link" value="{{trail.link}}"></p>
+                <input type='submit' value='Submit'>
+            </form>
+        </div>
+
+    </div>
+</body>
+</html>

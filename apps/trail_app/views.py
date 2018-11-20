@@ -16,48 +16,53 @@ def trails_main(request):
     }
     return render(request, "trail_app/trails.html", context)
 
-
-# process creating new book and new review associated
 def create_trail(request):
     if request.method == "POST":
-        # create new book
-        new_book = Books.objects.create(title=request.POST['title'], author=request.POST['author'])
+        errors = Trails.objects.trail_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+            return redirect('/trails')
+        else:
+            user = Users.objects.get(id=request.session['user_id'])
+            new_trail = Trails.objects.create(name=request.POST['name'], length=request.POST['length'], elevation=request.POST['elevation'], level=request.POST['level'], trail_head=request.POST['trail_head'], link=request.POST['link'], user_id=user)
 
-        # getting current user's object
-        user = Users.objects.get(id=request.session['user_id'])
-        # create new review with link to user and book objects
-        new_review = Reviews.objects.create(comment = request.POST['comment'], rating = int(request.POST['rating']), book_id = new_book , user_id = user)
-        # go to new book info page
-        return redirect(f"/books/{new_book.id}")
+        return redirect(f"/trails/{new_trail.id}")
 
-# show book info page with book info and reviews 
 def view_trail(request, id):
     context={
-        "book" : Books.objects.get(id= id),
-        "reviews" : Reviews.objects.filter (book_id= id)
+        "trail" : Trails.objects.get(id= id),
+        "reports" : Reports.objects.filter (trail_id= id)
     }
-    return render(request, "books_app/book_info.html", context)
+    return render(request, "trail_app/trail_info.html", context)
 
-def delete_trail(request, id):
+def delete_trail(request):
     if request.method == "POST":
-        this_review = Reviews.objects.get(id= request.POST['review_id'])
-        this_review.delete()
-        book = Books.objects.get(id= id)
-        return redirect(f"/books/{book.id}")
+        this_trail = Trails.objects.get(id= request.POST['trail_id'])
+        this_trail.delete()
+        return redirect('/trails')
 
-# show edit review form
 def edit_trail(request, id):
     context = {
-        "this_review": Reviews.objects.get(id=id)
+        "trail": Trails.objects.get(id=id)
     }
-    return render(request, "books_app/edit_review.html", context)
+    return render(request, "trail_app/edit_trail.html", context)
 
-# process updating review
 def update_trail(request, id):
     if request.method == "POST":
-        this_review = Reviews.objects.get(id=id)
-        this_review.comment = request.POST['comment']
-        this_review.rating = request.POST['rating']
-        this_review.save()
+        errors = Trails.objects.trail_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+            return redirect(f'/trails/{id}')
 
-        return redirect(f"/books/{this_review.book_id.id}")
+        this_trail = Trails.objects.get(id=id)
+        this_trail.name = request.POST['name']
+        this_trail.length = request.POST['length']
+        this_trail.elevation = request.POST['elevation']
+        this_trail.level = request.POST['level']
+        this_trail.trail_head = request.POST['trail_head']
+        this_trail.link = request.POST['link']
+        this_trail.save()
+
+        return redirect(f"/trails/{this_trail.id}")

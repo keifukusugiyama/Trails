@@ -6,10 +6,10 @@ from django.contrib import messages #for flash message
 def user_report(request, id):
     user_id= Users.objects.get(id=id)
     context={
-        "quotes" : Quotes.objects.filter (user_id= id),
+        "reports" : Reports.objects.filter (user_id= id),
         "user_name": user_id.first_name
     }
-    return render(request, "quotes_app/user_quote.html", context)
+    return render(request, "reports/user_reports.html", context)
 
 # process creating new review
 def create_report(request):
