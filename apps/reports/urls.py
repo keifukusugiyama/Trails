@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^delete_report$', views.delete_report),
     url(r'^(?P<id>\d+)/edit_report$', views.edit_report),
     url(r'^(?P<id>\d+)/update_report$', views.update_report),
+    url(r'^(?P<id>\d+)/new_comment$', views.new_comment),
 ]

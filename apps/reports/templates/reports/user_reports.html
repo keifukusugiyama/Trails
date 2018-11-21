@@ -44,14 +44,27 @@
                 <p>Elevation: {{each_exercise.elevation}}</p>
                 {% endfor %}
 
+                {% if each_report.user_id.id == request.session.user_id %}
                 <a href="/reports/{{each_report.id}}/edit_report">Edit Report</a>
-
                 <form action='/reports/delete_report' method='post'>
                     {% csrf_token %}
                     <input hidden name="report_id" value="{{each_report.id}}">
                     <input type='submit' value='Delete Report'>
-                    </form>
+                </form>
+                {% endif %}
+            
+            <div class="box">
+                {% for each_comment in each_report.comments.all %}
+                    <p>Comment: {{each_comment.comment_text}} By: {{each_comment.user_id.first_name}}- {{each_comment.updated_at}}</p>
+                {% endfor %}
+                <form action='/reports/{{each_report.id}}/new_comment' method='post'>
+                    {% csrf_token %}
+                    <p>Add comment: </p>
+                    <textarea name="comment_text" rows="1" cols="40"></textarea>
+                    <input type='submit' value='Submit'>
+                </form>
             </div>
+        </div>
             {% endfor %}
         </div>
             <h4>Wish List:</h4>

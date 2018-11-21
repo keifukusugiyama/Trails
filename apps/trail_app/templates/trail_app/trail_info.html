@@ -67,6 +67,15 @@
                     Rating: {{ each_report.rating }} Posted by: <a href="/reports/user/{{each_report.user_id.id}}">{{ each_report.user_id.first_name }}</a> - {{ each_report.updated_at }}
                 </p>
                 <p> Report: {{each_report.comment}}</p>
+                
+                {% if each_report.user_id.id == request.session.user_id %}
+                <a href="/reports/{{each_report.id}}/edit_report">Edit Report</a>
+                <form action='/reports/delete_report' method='post'>
+                    {% csrf_token %}
+                    <input hidden name="report_id" value="{{each_report.id}}">
+                    <input type='submit' value='Delete Report'>
+                </form>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

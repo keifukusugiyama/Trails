@@ -46,3 +46,10 @@ class Exercises(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = ExerciseManager()
+
+class Comments(models.Model):
+    comment_text = models.TextField()
+    report_id = models.ForeignKey(Reports, related_name="comments")
+    user_id = models.ForeignKey(Users,  related_name="comments")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

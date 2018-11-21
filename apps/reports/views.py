@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from apps.login_reg_app.models import Users #to use Users table for user id
 from apps.trail_app.models import Trails 
-from apps.reports.models import Reports, Exercises 
+from apps.reports.models import Reports, Exercises, Comments 
 from django.contrib import messages #for flash message
 
 def user_report(request, id):
@@ -40,9 +40,9 @@ def create_report(request):
 			# validate exercise fields
             errors2 = Exercises.objects.exercise_validator(request.POST)
             if len(errors2) > 0:
-                for key, value in errors.items():
+                for key, value in errors2.items():
                     messages.error(request, value)
-                    return redirect(f"/reports/{trail.id}/new_report")
+                return redirect(f"/reports/{trail.id}/new_report")
 			# if there's no error, add new exercise
             new_exercise = Exercises.objects.create(duration = request.POST['duration'], avg_bpm = request.POST['avg_bpm'], max_bpm = request.POST['max_bpm'], calories = request.POST['calories'], pace = request.POST['pace'], steps = request.POST['steps'], elevation = request.POST['elevation'], report_id = new_report, user_id = user)
 
@@ -69,5 +69,14 @@ def update_report(request, id):
         this_report.comment = request.POST['comment']
         this_report.rating = request.POST['rating']
         this_report.save()
+
+        return redirect(f"/reports/user/{this_report.user_id.id}")
+
+def new_comment(request, id):
+    if request.method == "POST":
+        this_report = Reports.objects.get(id= id)
+        user = Users.objects.get(id=request.session['user_id'])
+
+        new_comment = Comments.objects.create(comment_text = request.POST['comment_text'], report_id = this_report, user_id = user)
 
         return redirect(f"/reports/user/{this_report.user_id.id}")
