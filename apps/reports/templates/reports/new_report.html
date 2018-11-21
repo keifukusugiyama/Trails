@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Edit Report</title>
-    <meta name="Trails" content="edit report">
+    <title>New Report</title>
+    <meta name="Trails" content="add new report/ exercise">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
     crossorigin="anonymous">
 
@@ -27,18 +27,34 @@
         </div>
 
         <div>
-            <h3>Edit report</h3>
+            <h3>Add new Report and Exercise for {{trail.name}}</h3>
             {% if messages %}
                 {% for message in messages %}
                     <p style="color: red;">{{message}}</p>
                 {% endfor %}
             {% endif %}
 
-            <form action='/reports/{{this_report.id}}/update_report' method='post'>
+            <form action='/reports/create_report' method='post'>
                 {% csrf_token %}
                 <p>Report: </p>
-                <textarea name="comment" rows="5" cols="60">{{this_report.comment}}</textarea>
+                <textarea name="comment" rows="5" cols="60"></textarea>
                 <p>Rating: <input type="number" name="rating" min="1" max="5"></p>
+                <input type="hidden" name="trail_id" value="{{trail.id}}">
+
+                <p>Do you want to add Exercise log as well?</p>
+                <input type="radio" name="log_exercise" value="yes"> YES | 
+                <input type="radio" name="log_exercise" value="no"> NO
+
+                <div class="exercise_form">
+                    <p>Duration (HH:MM): <input type="text" name="duration"></p> 
+                    <p>Average Heart-rate BPM (ex: 120): <input type="text" name="avg_bpm"> bpm</p> 
+                    <p>Maximum Heart-rate BPM (ex: 170): <input type="text" name="max_bpm"> bpm</p> 
+                    <p>Calories burned (ex: 200): <input type="text" name="calories"> cals</p> 
+                    <p>Pace (ex: 24'34" or 10.3mph): <input type="text" name="pace"> </p> 
+                    <p>Steps (ex: 8,000): <input type="text" name="steps"></p>
+                    <p>Elevation (ex: 500): <input type="text" name="elevation">ft</p>
+                </div>
+
                 <input type='submit' value='Submit'>
             </form>
     </div>

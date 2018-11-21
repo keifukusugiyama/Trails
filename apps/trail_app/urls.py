@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^delete_trail$', views.delete_trail),
     url(r'^(?P<id>\d+)/edit_trail$', views.edit_trail),
     url(r'^(?P<id>\d+)/update_trail$', views.update_trail),
+    url(r'^add_wishlist$', views.add_wishlist),
 ]

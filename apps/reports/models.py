@@ -20,3 +20,16 @@ class Reports(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = ReportManager()
+
+class Exercises(models.Model):
+    duration = models.CharField(max_length=255)
+    avg_bpm = models.IntegerField(null=True)
+    max_bpm = models.IntegerField(null=True)
+    calories = models.IntegerField()
+    pace = models.CharField(max_length=255)
+    steps = models.IntegerField(null=True)
+    elevation = models.IntegerField(null=True)
+    report_id = models.ForeignKey(Reports, related_name="exercises")
+    user_id = models.ForeignKey(Users,  related_name="exercises")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

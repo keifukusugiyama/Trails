@@ -35,7 +35,7 @@
                 <p class="bold">
                     Trail: <a href="/trails/{{each_report.trail_id.id}}">{{ each_report.trail_id.name }}</a>
                     Rating: {{ each_report.rating }}
-                    Posted by: <a href="/reports/user/{{each_report.user_id.id}}">{{ each_report.user_id.first_name }}</a> - {{ each_report.updated_at }}
+                    By: <a href="/reports/user/{{each_report.user_id.id}}">{{ each_report.user_id.first_name }}</a> - {{ each_report.updated_at }}
                 </p>
                 <p> Report: {{each_report.comment}}</p>
             </div>
@@ -58,6 +58,14 @@
                 <p>Posted by: 
                     <a href="/reports/user/{{each_trail.user_id.id}}"> {{ each_trail.user_id.first_name }} </a>
                     at {{each_trail.updated_at}}
+                </p>
+                <p><a href="/trails/{{each_trail.id}}">View reports for this trail!</a></p>
+                <p>
+                    <form action='/trails/add_wishlist' method='post'>
+                    {% csrf_token %}
+                    <input hidden name="trail_id" value="{{each_trail.id}}">
+                    <input type='submit' value='Add to Wish List'>
+                    </form>
                 </p>
             </div>
             {% endfor %}

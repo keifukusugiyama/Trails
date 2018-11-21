@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Trails</title>
-    <meta name="Trails" content="list of trails and add a new trail">
+    <title>User's page</title>
+    <meta name="Trails" content="list of trails and reports">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
     crossorigin="anonymous">
 
@@ -18,7 +18,7 @@
         <div class="heading d-flex">
             <h1>{{user_name}}'s page</h1>
             <div class="ml-auto">
-                <a href="/trails">Go back to Trails Home</a>
+                <a href="/trails">Trails Home</a>
                 <form action="/logout" method="POST">
                 {% csrf_token %}
                     <button class="btn btn-primary my-2">Logout</button>

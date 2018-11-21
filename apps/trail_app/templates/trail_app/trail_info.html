@@ -18,7 +18,7 @@
         <div class="heading d-flex">
             <h1>Trail: {{trail.name}}</h1>
             <div class="ml-auto">
-                <a href="/trails">Go back to Trails Home</a>
+                <a href="/trails">Trails Home</a>
                 <a href="/reports/user/{{request.session.user_id}}">My Reports</a>
                 <form action="/logout" method="POST">
                 {% csrf_token %}
@@ -37,6 +37,15 @@
                 <li>Posted by: 
                     <a href="/reports/user/{{trail.user_id.id}}"> {{trail.user_id.first_name }}</a> at {{trail.updated_at}}
                 </li>
+
+                <li>
+                    <form action='/trails/add_wishlist' method='post'>
+                        {% csrf_token %}
+                        <input hidden name="trail_id" value="{{trail.id}}">
+                        <input type='submit' value='Add to Wish List'>
+                    </form>
+                </li>
+
                 {% if trail.user_id.id == request.session.user_id %}
                     <li><a href="/trails/{{trail.id}}/edit_trail">Edit trail info</a></li>
                     <li>                
@@ -65,6 +74,8 @@
 
         <div>
             <h3>Add a report!</h3>
+            <a href="/reports/{{trail.id}}/new_report">Add a new Report</a>
+            
             {% if messages %}
                 {% for message in messages %}
                     <p style="color: red;">{{message}}</p>

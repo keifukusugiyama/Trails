@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from apps.login_reg_app.models import Users #to use Users table for user id
 from apps.trail_app.models import Trails 
-from apps.reports.models import Reports 
+from apps.reports.models import Reports, Exercises 
 from django.contrib import messages #for flash message
 
 def user_report(request, id):
@@ -13,6 +13,12 @@ def user_report(request, id):
     }
     return render(request, "reports/user_reports.html", context)
 
+def new_report(request, id):
+	context={
+		'trail' : Trails.objects.get(id=id)
+	}
+	return render(request, "reports/new_report.html", context)
+
 # process creating new report
 def create_report(request):
     if request.method == "POST":
@@ -20,6 +26,8 @@ def create_report(request):
         trail = Trails.objects.get(id= request.POST['trail_id'])
 
         new_report = Reports.objects.create(comment = request.POST['comment'], rating = request.POST['rating'], trail_id = trail, user_id = user)
+
+        new_exercise = Exercises.objects.create(duration = request.POST['duration'], avg_bpm = request.POST['avg_bpm'], max_bpm = request.POST['max_bpm'], calories = request.POST['calories'], pace = request.POST['pace'], steps = request.POST['steps'], elevation = request.POST['elevation'], report_id = new_report, user_id = user)
 
         return redirect(f"/trails/{trail.id}")
 

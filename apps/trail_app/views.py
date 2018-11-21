@@ -66,3 +66,11 @@ def update_trail(request, id):
         this_trail.save()
 
         return redirect(f"/trails/{this_trail.id}")
+
+def add_wishlist(request):
+    if request.method == "POST":
+        this_trail = Trails.objects.get(id= request.POST['trail_id'])
+        user = Users.objects.get(id=request.session['user_id'])
+        this_trail.wish_list_users.add(user)
+
+        return redirect(f"/reports/user/{user.id}")
