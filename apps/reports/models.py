@@ -12,6 +12,18 @@ class ReportManager(models.Manager):
             errors["rating"] = "Enter your rating"
         return errors
 
+class ExerciseManager(models.Manager):
+    def exercise_validator(self, postData):
+        errors = {}
+        if len(postData['duration']) < 1:
+            errors['duration'] = "Enter duration of your exercise"
+        if len(postData['calories']) < 1:
+            errors['calories'] = "Enter calories burned from your exercise"
+        if len(postData['pace']) < 1:
+            errors['pace'] = "Enter how fast you hiked/walked/biked"
+        
+        return errors
+
 class Reports(models.Model):
     comment = models.TextField()
     rating = models.IntegerField()
@@ -33,3 +45,4 @@ class Exercises(models.Model):
     user_id = models.ForeignKey(Users,  related_name="exercises")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = ExerciseManager()

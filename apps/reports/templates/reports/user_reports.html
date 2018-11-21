@@ -32,13 +32,24 @@
             <div class="box">
                 <p> Trail: <a href="/trails/{{each_report.trail_id.id}}">{{each_report.trail_id.name}}</a> Rating: {{ each_report.rating }}, at {{ each_report.updated_at }}</p>
                 <p> Report: {{each_report.comment}}</p>
+                
+                {% for each_exercise in each_report.exercises.all %}
                 <p>Exercise logs:</p>
-                <a href="/reports/{{each_report.id}}/edit_report">Edit</a>
+                <p>Duration: {{each_exercise.duration}}</p>
+                <p>Average Heart-rate BPM: {{each_exercise.avg_bpm}}</p>
+                <p>Maximum Heart-rate BPM: {{each_exercise.avg_bpm}}</p>
+                <p>Calories burned: {{each_exercise.calories}}</p>
+                <p>Pace: {{each_exercise.pace}}</p>
+                <p>Steps: {{each_exercise.steps}}</p>
+                <p>Elevation: {{each_exercise.elevation}}</p>
+                {% endfor %}
+
+                <a href="/reports/{{each_report.id}}/edit_report">Edit Report</a>
 
                 <form action='/reports/delete_report' method='post'>
                     {% csrf_token %}
                     <input hidden name="report_id" value="{{each_report.id}}">
-                    <input type='submit' value='Delete'>
+                    <input type='submit' value='Delete Report'>
                     </form>
             </div>
             {% endfor %}

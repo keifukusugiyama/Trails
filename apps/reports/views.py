@@ -7,9 +7,9 @@ from django.contrib import messages #for flash message
 def user_report(request, id):
     user_id= Users.objects.get(id=id)
     context={
-        "reports" : Reports.objects.filter (user_id= id),
+        "reports" : Reports.objects.filter(user_id= id),
         "user_name": user_id.first_name,
-        "wish_list_trails": Trails.objects.filter(wish_list_users = id)
+        "wish_list_trails": Trails.objects.filter(wish_list_users = id),
     }
     return render(request, "reports/user_reports.html", context)
 
@@ -22,12 +22,29 @@ def new_report(request, id):
 # process creating new report
 def create_report(request):
     if request.method == "POST":
+		# saving user and trail for foreign key
         user = Users.objects.get(id=request.session['user_id'])
         trail = Trails.objects.get(id= request.POST['trail_id'])
 
+		# validate reports fields
+        errors = Reports.objects.report_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+            return redirect(f"/reports/{trail.id}/new_report")
+		# if there's no error, add new report
         new_report = Reports.objects.create(comment = request.POST['comment'], rating = request.POST['rating'], trail_id = trail, user_id = user)
 
-        new_exercise = Exercises.objects.create(duration = request.POST['duration'], avg_bpm = request.POST['avg_bpm'], max_bpm = request.POST['max_bpm'], calories = request.POST['calories'], pace = request.POST['pace'], steps = request.POST['steps'], elevation = request.POST['elevation'], report_id = new_report, user_id = user)
+		#if user said yes to adding exercise log
+        if request.POST['log_exercise'] == "yes":
+			# validate exercise fields
+            errors2 = Exercises.objects.exercise_validator(request.POST)
+            if len(errors2) > 0:
+                for key, value in errors.items():
+                    messages.error(request, value)
+                    return redirect(f"/reports/{trail.id}/new_report")
+			# if there's no error, add new exercise
+            new_exercise = Exercises.objects.create(duration = request.POST['duration'], avg_bpm = request.POST['avg_bpm'], max_bpm = request.POST['max_bpm'], calories = request.POST['calories'], pace = request.POST['pace'], steps = request.POST['steps'], elevation = request.POST['elevation'], report_id = new_report, user_id = user)
 
         return redirect(f"/trails/{trail.id}")
 

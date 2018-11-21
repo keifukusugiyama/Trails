@@ -73,23 +73,8 @@
         
 
         <div>
-            <h3>Add a report!</h3>
-            <a href="/reports/{{trail.id}}/new_report">Add a new Report</a>
-            
-            {% if messages %}
-                {% for message in messages %}
-                    <p style="color: red;">{{message}}</p>
-                {% endfor %}
-            {% endif %}
+            <h3><a href="/reports/{{trail.id}}/new_report">Add a new Report and Exercise log!</a></h3>
 
-            <form action='/reports/create_report' method='post'>
-                {% csrf_token %}
-                <p>Report: </p>
-                <textarea name="comment" rows="5" cols="60"></textarea>
-                <p>Rating: <input type="number" name="rating" min="1" max="5"></p>
-                <input type="hidden" name="trail_id" value="{{trail.id}}">
-                <input type='submit' value='Submit'>
-            </form>
         </div>
 
     </div>
