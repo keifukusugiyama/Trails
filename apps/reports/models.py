@@ -1,6 +1,7 @@
 from django.db import models
 from apps.login_reg_app.models import Users
 from apps.trail_app.models import Trails 
+import re
 
 class ReportManager(models.Manager):
     def report_validator(self, postData):
@@ -17,11 +18,23 @@ class ExerciseManager(models.Manager):
         errors = {}
         if len(postData['duration']) < 1:
             errors['duration'] = "Enter duration of your exercise"
-        if len(postData['calories']) < 1:
-            errors['calories'] = "Enter calories burned from your exercise"
         if len(postData['pace']) < 1:
             errors['pace'] = "Enter how fast you hiked/walked/biked"
         
+        INT_REGEX = re.compile(r'^\d+$')
+        if not INT_REGEX.match(postData['avg_bpm']):
+            errors["avg_bpm"] = "Average BPM needs to be in number"
+        if not INT_REGEX.match(postData['max_bpm']):
+            errors["avg_bpm"] = "Max BPM needs to be in number"
+        if len(postData['calories']) < 1:
+            errors['calories'] = "Enter calories burned from your exercise"
+        if not INT_REGEX.match(postData['calories']):
+            errors["calories"] = "calories needs to be in number"
+        if not INT_REGEX.match(postData['steps']):
+            errors["steps"] = "steps needs to be in number"
+        if not INT_REGEX.match(postData['elevation']):
+            errors["elevation"] = "elevation needs to be in number"
+
         return errors
 
 class Reports(models.Model):

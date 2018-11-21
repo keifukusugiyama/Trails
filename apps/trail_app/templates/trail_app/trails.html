@@ -10,67 +10,92 @@
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'login_reg_app/css/style.css' %}">  
+    <style>
+        div.background1{
+            background-image: url("{% static 'login_reg_app/img/snow_mountain.jpg' %}");
+            background-color: rgba(255, 255, 255, 0.5);
+            background-blend-mode: lighten;
+            background-size: cover;
+            }
+    </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+            .checked {
+                color: orange;
+            }
+        </style>
 
 </head>
 
 <body>
-    <div class="jumbotron">
+    <div class="jumbotron background1">
 
-        <p>Welcome, {{ request.session.user_name }}</p>
         <div class="heading d-flex">
             <h1>Trails</h1>
-            <div class="ml-auto">
-                <a href="/reports/user/{{request.session.user_id}}">My Reports</a>
-                <form action="/logout" method="POST">
+
+            <nav class="navbar ml-auto">
+                <p >Welcome, {{ request.session.user_name }}</p>
+                <a  href="/trails">Trails Home</a>
+                <a  href="/reports/user/{{request.session.user_id}}">My Reports</a>
+                <form  action="/logout" method="POST">
                 {% csrf_token %}
                     <button class="btn btn-primary my-2">Logout</button>
                 </form>
-            </div>
+            </nav>
         </div>
-
-        <div>
-            <h3>Check out some of the latest reports:</h3>
+<!-- latest reports at top -->
+        <h3>Check out some of the latest reports:</h3>
+        <div class="content top">
             {% for each_report in all_reports %}
-            <div>
-                <p class="bold">
-                    Trail: <a href="/trails/{{each_report.trail_id.id}}">{{ each_report.trail_id.name }}</a>
-                    Rating: {{ each_report.rating }}
-                    By: <a href="/reports/user/{{each_report.user_id.id}}">{{ each_report.user_id.first_name }}</a> - {{ each_report.updated_at }}
+            <div class="box">
+                <p>
+                    <span class="bold"><a href="/trails/{{each_report.trail_id.id}}">{{ each_report.trail_id.name }}</a></span>
+                    <!-- start rating stars -->
+                    Rating:
+                        {% with ''|center:each_report.rating as range %}
+                        {% for i in range %}
+                        <span class="fa fa-star checked"></span>
+                        {% endfor %}
+                        {% endwith %}
+                    <!-- end rating stars -->
+                    
+                    By: <span class="bold"><a href="/reports/user/{{each_report.user_id.id}}">{{ each_report.user_id.first_name }}</a></span> - {{ each_report.updated_at }}
                 </p>
-                <p> Report: {{each_report.comment}}</p>
+                <p> <span class="bold">Report: </span>{{each_report.comment}}</p>
             </div>
             {% endfor %}
         </div>
-        
-        <div class="main_contents">
+<!-- end latest reports -->
+<!-- start display every trails -->
+        <div class="main_contents left">
             <h3>Trails:</h3>
-            <!-- display every trails -->
             {% for each_trail in all_trails %}
             <div class="box">
-                <p class="bold">
-                    <a href="/trails/{{each_trail.id}}">{{ each_trail.name }}</a> 
-                </p>
-                <p>
-                    Length: {{each_trail.length}}, Elevation: {{each_trail.elevation}}, Level: {{each_trail.level}}
-                </p>
-                <p>Trail Head: {{each_trail.trail_head}}</p>
-                <p>Link: {{each_trail.link}}</p>
-                <p>Posted by: 
-                    <a href="/reports/user/{{each_trail.user_id.id}}"> {{ each_trail.user_id.first_name }} </a>
-                    at {{each_trail.updated_at}}
-                </p>
-                <p><a href="/trails/{{each_trail.id}}">View reports for this trail!</a></p>
-                <p>
-                    <form action='/trails/add_wishlist' method='post'>
-                    {% csrf_token %}
-                    <input hidden name="trail_id" value="{{each_trail.id}}">
-                    <input type='submit' value='Add to Wish List'>
-                    </form>
-                </p>
+                <h5>
+                    <a href="/trails/{{each_trail.id}}">{{ each_trail.name }}</a>
+                </h5> 
+                <ul>
+                    <li><span class="bold">Length: </span> {{each_trail.length}}</li>
+                    <li><span class="bold">Elevation: </span> {{each_trail.elevation}}</li>
+                    <li><span class="bold">Level: </span>{{each_trail.level}}</li>
+                    <li><span class="bold">Trail Head: </span> {{each_trail.trail_head}}</li>
+                    <li><span class="bold">Link: </span> {{each_trail.link}}</li>
+                    <li>
+                        <span class="bold">Posted by: </span><a href="/reports/user/{{each_trail.user_id.id}}"> {{ each_trail.user_id.first_name }}</a> at {{each_trail.updated_at}}
+                    </li>
+                    <li>
+                        <form action='/trails/add_wishlist' method='post'>
+                        {% csrf_token %}
+                            <input hidden name="trail_id" value="{{each_trail.id}}">
+                            <input type='submit' value='Add to Wish List'>
+                        </form>
+                    </li>
+                </ul>
             </div>
             {% endfor %}
         </div>
-
+<!-- end display every trails -->
+<!-- start add trail form -->
         <div class="main_contents right">
             <h3>Add a Trail!</h3>
             {% if messages %}
@@ -96,6 +121,7 @@
                 <input type='submit' value='Submit'>
             </form>
         </div>
+<!-- end add trail form -->
 
     </div>
 </body>

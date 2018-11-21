@@ -10,14 +10,29 @@
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'login_reg_app/css/style.css' %}">  
+    <style>
+        div.background1{
+            background-image: url("{% static 'login_reg_app/img/mountains.jpg' %}");
+            background-color: rgba(255, 255, 255, 0.5);
+            background-blend-mode: lighten;
+            background-size: cover;
+            }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .checked {
+            color: orange;
+        }
+    </style>
 
 </head>
 
 <body>
-    <div class="jumbotron">
+    <div class="jumbotron background1">
         <div class="heading d-flex">
             <h1>Trail: {{trail.name}}</h1>
             <div class="ml-auto">
+                    {{ request.session.user_name }}
                 <a href="/trails">Trails Home</a>
                 <a href="/reports/user/{{request.session.user_id}}">My Reports</a>
                 <form action="/logout" method="POST">
@@ -26,18 +41,29 @@
                 </form>
             </div>
         </div>
-
-        <div class="trail_info">
+<!-- end header -->
+<!-- start description of trail  -->
+        <div class="content">
             <ul>
-                <li>Length: {{trail.length}}</li>
-                <li>Elevation: {{trail.elevation}}</li>
-                <li>Level: {{trail.level}}</li>
-                <li>Trail Head: {{trail.trail_head}}</li>
-                <li>Link: <a href="{{trail.link}}">{{trail.link}}</a></li>
-                <li>Posted by: 
+                <li><span class="bold">Length: </span>{{trail.length}}</li>
+                <li><span class="bold">Elevation: </span>{{trail.elevation}}</li>
+                <li><span class="bold">Level: </span>{{trail.level}}</li>
+                <li><span class="bold">Trail Head: </span>{{trail.trail_head}}</li>
+                <li><span class="bold">Link: </span><a href="{{trail.link}}">{{trail.link}}</a></li>
+                <li><span class="bold">Posted by: </span> 
                     <a href="/reports/user/{{trail.user_id.id}}"> {{trail.user_id.first_name }}</a> at {{trail.updated_at}}
                 </li>
 
+                {% if trail.user_id.id == request.session.user_id %}
+                <li>
+                    <a href="/trails/{{trail.id}}/edit_trail">Edit trail info</a>             
+                    <form action='/trails/delete_trail' method='post'>
+                    {% csrf_token %}
+                        <input hidden name="trail_id" value="{{trail.id}}">
+                        <input type='submit' value='Delete this trail'>
+                    </form>
+                </li>
+                {% endif %}
                 <li>
                     <form action='/trails/add_wishlist' method='post'>
                         {% csrf_token %}
@@ -46,28 +72,41 @@
                     </form>
                 </li>
 
-                {% if trail.user_id.id == request.session.user_id %}
-                    <li><a href="/trails/{{trail.id}}/edit_trail">Edit trail info</a></li>
-                    <li>                
-                        <form action='/trails/delete_trail' method='post'>
-                        {% csrf_token %}
-                        <input hidden name="trail_id" value="{{trail.id}}">
-                        <input type='submit' value='Delete this trail'>
-                        </form>
-                    </li>
-                {% endif %}
             </ul>
         </div>
-
-        <div>
+<!-- end description at top -->
+<!-- start Reports content -->
+        <div class="main_contents left">
             <h3>Reports on this trail:</h3>
             {% for each_report in reports %}
             <div class="box">
                 <p>
-                    Rating: {{ each_report.rating }} Posted by: <a href="/reports/user/{{each_report.user_id.id}}">{{ each_report.user_id.first_name }}</a> - {{ each_report.updated_at }}
+                    <!-- start rating stars -->
+                    Rating:
+                    {% with ''|center:each_report.rating as range %}
+                    {% for i in range %}
+                    <span class="fa fa-star checked"></span>
+                    {% endfor %}
+                    {% endwith %}
+                    <!-- end rating star -->
+
+                    Posted by: <a href="/reports/user/{{each_report.user_id.id}}">{{ each_report.user_id.first_name }}</a> - {{ each_report.updated_at }}
                 </p>
-                <p> Report: {{each_report.comment}}</p>
-                
+                <p> <span class="bold">Report: </span>{{each_report.comment}}</p>
+
+                {% for each_exercise in each_report.exercises.all %}
+                <p><span class="bold">Exercise logs:</span></p>
+                <ul>
+                    <li>Duration: {{each_exercise.duration}}</li>
+                    <li>Average Heart-rate: {{each_exercise.avg_bpm}} bpm</li>
+                    <li>Maximum Heart-rate: {{each_exercise.max_bpm}} bpm</li>
+                    <li>Calories burned: {{each_exercise.calories}} cal</li>
+                    <li>Pace: {{each_exercise.pace}}</li>
+                    <li>Steps: {{each_exercise.steps}}</li>
+                    <li>Elevation: {{each_exercise.elevation}}ft</li>
+                </ul>
+                {% endfor %}
+
                 {% if each_report.user_id.id == request.session.user_id %}
                 <a href="/reports/{{each_report.id}}/edit_report">Edit Report</a>
                 <form action='/reports/delete_report' method='post'>
@@ -76,13 +115,29 @@
                     <input type='submit' value='Delete Report'>
                 </form>
                 {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-        
+            <!-- comments box -->
+                <div class="box comments">
+                    <p><span class="bold">Comments: </span></p>
 
-        <div>
-            <h3><a href="/reports/{{trail.id}}/new_report">Add a new Report and Exercise log!</a></h3>
+                    {% for each_comment in each_report.comments.all %}
+                        {{each_comment.comment_text}} By: <a href="/reports/user/{{each_comment.user_id.id}}">{{each_comment.user_id.first_name}}</a>- {{each_comment.updated_at}}</p>
+                    {% endfor %}
+                    <form action='/reports/{{each_report.id}}/new_comment' method='post'>
+                        {% csrf_token %}
+                        <p>Add comment: </p>
+                        <textarea name="comment_text" rows="1" cols="40"></textarea>
+                        <input type='submit' value='Submit'>
+                    </form>
+                </div>
+            <!-- end comments -->
+            </div>
+            {% endfor %} 
+            <!-- end rech report loop -->
+        </div>
+<!-- end reports -->
+<!-- right content -->
+        <div class="main_contents">
+            <p><span class="bold"><a href="/reports/{{trail.id}}/new_report">Add new Report/ Exercise log!</a></span></p>
 
         </div>
 

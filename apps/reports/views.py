@@ -7,7 +7,7 @@ from django.contrib import messages #for flash message
 def user_report(request, id):
     user_id= Users.objects.get(id=id)
     context={
-        "reports" : Reports.objects.filter(user_id= id),
+        "reports" : Reports.objects.filter(user_id= id).order_by('-updated_at'),
         "user_name": user_id.first_name,
         "wish_list_trails": Trails.objects.filter(wish_list_users = id),
     }

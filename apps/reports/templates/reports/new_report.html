@@ -10,13 +10,22 @@
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'login_reg_app/css/style.css' %}">  
+    <style>
+            div.background1{
+                background-image: url("{% static 'login_reg_app/img/snow_mountain.jpg' %}");
+                background-color: rgba(255, 255, 255, 0.5);
+                background-blend-mode: lighten;
+                background-size: cover;
+                }
+        </style>
 
 </head>
 
 <body>
-    <div class="jumbotron">
+    <div class="jumbotron background1">
         <div class="heading d-flex">
             <div class="ml-auto">
+                {{ request.session.user_name }}
                 <a href="/trails">Trails Home</a>
                 <a href="/reports/user/{{request.session.user_id}}">My Reports</a>
                 <form action="/logout" method="POST">
@@ -26,7 +35,7 @@
             </div>
         </div>
 
-        <div>
+        <div class="content">
             <h3>Add new Report and Exercise for {{trail.name}}</h3>
             {% if messages %}
                 {% for message in messages %}
@@ -38,7 +47,7 @@
                 {% csrf_token %}
                 <p>Report: </p>
                 <textarea name="comment" rows="5" cols="60"></textarea>
-                <p>Rating: <input type="number" name="rating" min="1" max="5"></p>
+                <p>Rating (1-worst, 5-best): <input type="number" name="rating" min="1" max="5"></p>
                 <input type="hidden" name="trail_id" value="{{trail.id}}">
 
                 <p>Do you want to add Exercise log as well?</p>

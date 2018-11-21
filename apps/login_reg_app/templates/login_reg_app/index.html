@@ -10,11 +10,25 @@
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'login_reg_app/css/style.css' %}"> 
+    <style>
+        div.background1{
+            background-image: url("{% static 'login_reg_app/img/lake.jpg' %}");
+            background-color: rgba(255, 255, 255, 0.5);
+            background-blend-mode: lighten;
+            background-size: cover;
+            }
+    </style>
 </head>
 
 <body>
-    <div class="jumbotron">
-        {% if messages %}
+    <div class="jumbotron background1">
+        <div class="heading">
+            <h1>Welcome to the Trails Website!</h1>
+            <p>Keep track of your favorite trails for hiking/ biking/ walking and share with other users!</p>
+            <p> Some of the things you can do: You can rate and write report for trails that you've done. You can add exercise log from your fitness tracker (requires manual entry) together with the report. You can add trails to Wish List. You can comment on other user's reports.</p>
+            
+        </div>
+         {% if messages %}
         <!-- check if there are any messages -->
         <h4>Found errors on submitted form:</h4>
             {% for msg in messages %}
@@ -22,13 +36,6 @@
                 <p style="color:red;">{{msg}}</p> <!-- display each message in a paragraph tag -->
             {% endfor %}
         {% endif %}
-
-        <div class="heading">
-            <h1>Welcome to the Trails Website!</h1>
-            <p>You can keep track of your favorite trails for hiking/ biking/ walking and share with other users! You can rate trails and add reports!</p>
-            <p>Integration with exercise report from FitBit coming soon...</p>
-        </div>
-        
         <div class="main_contents">
             <h3>Login</h3>
             <form action='/login' method='post'>

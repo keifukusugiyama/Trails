@@ -1,7 +1,9 @@
+
 .heading{
     min-height: 70px;
     margin-bottom: 30px;
     border-bottom: 1px solid black;
+
 }
 .heading *{
     display: inline-block;
@@ -9,27 +11,48 @@
 .main_contents{
     display: inline-block;
     vertical-align: top;
-    width: 40%;
+    background-color: rgba(255, 255, 255, 0.7);
+    max-height: 800px;
+    padding: 20px;
+    overflow: auto;
+}
+
+.left{
+    width: 70%;
+}
+
+.right{
+    margin-left: 10px;
+}
+.content{
+    background-color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    padding: 10px;
+    margin: 20px;
+}
+.top{
+    max-height: 200px;
+    overflow: auto;
+    margin-bottom: 20px;
 }
 
 .box{
 
     border: 1px solid black;
-
     word-wrap: break-word;
-    margin-bottom: 5px;
+    margin: 10px;
+    padding: 10px;
 }
-.right{
-    margin-left: 15%;
+
+.comments{
+    border: 1px solid green;
+    width: 70%;
 }
 
 .bold{
     font-weight: bold;
 }
 
-.trail_info{
-    text-align: center;
+li{
+    list-style-type: none;
 }
-    .trail_info li{
-        list-style-type: none;
-    }
